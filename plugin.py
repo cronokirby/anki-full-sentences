@@ -8,7 +8,7 @@ Morpheme = namedtuple('Morpheme', ['raw', 'reading'])
 class Tagger:
     def __init__(self):
         self.mecab = MeCab.Tagger('-Ochasen')
-    
+
     def tag(self, sentence):
         acc = []
         mecab_out = self.mecab.parse(sentence)
