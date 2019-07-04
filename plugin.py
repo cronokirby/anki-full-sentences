@@ -1,9 +1,11 @@
 from collections import namedtuple
+import csv
 import MeCab
+import os
 
 
 Morpheme = namedtuple('Morpheme', ['raw', 'reading'])
-
+NHKEntry = namedtuple('NHKEntry', ['reading', 'accent'])
 
 class Tagger:
     def __init__(self):
@@ -18,3 +20,17 @@ class Tagger:
             parts = line.split('\t')
             acc.append(Morpheme(raw=parts[0], reading=parts[1]))
         return acc
+
+
+class NHKDict:
+    def __init__(self, relpath='nhk.tsv'):
+        path = os.path.join(os.path.dirname(__file__), relpath)
+        self.dict = dict()
+        with open(path) as fp:
+            reader = csv.reader(fp, delimiter='\t')
+            for row in reader:
+                self.dict[row[0]] = NHKEntry(reading=row[1], accent=int(row[2]))
+
+    def lookup(self, word):
+        return self.dict.get(word)
+        
