@@ -6,12 +6,13 @@ class TestTagger(unittest.TestCase):
 
     def test_simple_sentences(self):
         tagger = Tagger()
-        sentence = '猫が大好き。'
+        sentence = '猫が見た。'
         expected = [
-            Morpheme('猫', 'ネコ'),
-            Morpheme('が', 'ガ'),
-            Morpheme('大好き', 'ダイスキ'),
-            Morpheme('。', '。')
+            Morpheme('猫', 'ネコ', '猫'),
+            Morpheme('が', 'ガ', 'が'),
+            Morpheme('見', 'ミ', '見る'),
+            Morpheme('た', 'タ', 'た'),
+            Morpheme('。', '。', '。')
         ]
         self.assertEqual(tagger.tag(sentence), expected)
 

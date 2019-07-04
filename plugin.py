@@ -7,8 +7,9 @@ SIMPLE_ACCENT_WORDS = [
     'です'
 ]
 
-Morpheme = namedtuple('Morpheme', ['raw', 'reading'])
+Morpheme = namedtuple('Morpheme', ['raw', 'reading', 'root'])
 NHKEntry = namedtuple('NHKEntry', ['reading', 'accent'])
+WordInfo = namedtuple('WordInfo', ['raw', 'furigana', 'accent'])
 
 
 class Tagger:
@@ -22,7 +23,7 @@ class Tagger:
             if line == 'EOS':
                 break
             parts = line.split('\t')
-            acc.append(Morpheme(raw=parts[0], reading=parts[1]))
+            acc.append(Morpheme(raw=parts[0], reading=parts[1], root=parts[2]))
         return acc
 
 
@@ -46,3 +47,22 @@ def simple_accent(word):
     if word.raw in SIMPLE_ACCENT_WORDS:
         return True
     return False
+
+
+def is_kanji(character):
+    o = ord(character)
+    return o >= 0x4E00 and o <= 0x9FA5
+
+
+def needs_furigana(raw_word):
+    return all(map(lambda x: not is_kanji(x), raw_word))
+
+
+def get_info(word, nhk):
+    furigana = None
+    accent = None
+    if needs_furigana(word.raw):
+        furigana = word.reading
+    if not simple_accent(word):
+        accent = nhk.lookup()
+    return WordInfo(word.raw, furigana, accent)
