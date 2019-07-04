@@ -55,7 +55,7 @@ def is_kanji(character):
 
 
 def needs_furigana(raw_word):
-    return all(map(lambda x: not is_kanji(x), raw_word))
+    return any(map(lambda x: is_kanji(x), raw_word))
 
 
 def get_info(word, nhk):
@@ -64,5 +64,5 @@ def get_info(word, nhk):
     if needs_furigana(word.raw):
         furigana = word.reading
     if not simple_accent(word):
-        accent = nhk.lookup()
+        accent = nhk.lookup(word.root).accent
     return WordInfo(word.raw, furigana, accent)
