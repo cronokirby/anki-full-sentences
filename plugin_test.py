@@ -1,5 +1,5 @@
 import unittest
-from plugin import *
+from plugin import Morpheme, Tagger
 
 
 class TestTagger(unittest.TestCase):
