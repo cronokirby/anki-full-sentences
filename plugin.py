@@ -3,9 +3,13 @@ import csv
 import MeCab
 import os
 
+SIMPLE_ACCENT_WORDS = [
+    'です'
+]
 
 Morpheme = namedtuple('Morpheme', ['raw', 'reading'])
 NHKEntry = namedtuple('NHKEntry', ['reading', 'accent'])
+
 
 class Tagger:
     def __init__(self):
@@ -29,8 +33,16 @@ class NHKDict:
         with open(path) as fp:
             reader = csv.reader(fp, delimiter='\t')
             for row in reader:
-                self.dict[row[0]] = NHKEntry(reading=row[1], accent=int(row[2]))
+                self.dict[row[0]] = NHKEntry(
+                    reading=row[1], accent=int(row[2]))
 
     def lookup(self, word):
         return self.dict.get(word)
-        
+
+
+def simple_accent(word):
+    if len(word.reading) == 1:
+        return True
+    if word.raw in SIMPLE_ACCENT_WORDS:
+        return True
+    return False
