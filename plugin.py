@@ -66,3 +66,19 @@ def get_info(word, nhk):
     if not simple_accent(word):
         accent = nhk.lookup(word.root).accent
     return WordInfo(word.raw, furigana, accent)
+
+
+class SentenceTagger:
+    def __init__(self):
+        self.nhk = NHKDict()
+        self.tagger = Tagger()
+
+    def html_out(self, sentence):
+        parts = self.tagger.tag(sentence)
+        html = ''
+        for word in parts:
+            info = get_info(word, self.nhk)
+            html += info.raw
+            if info.furigana:
+                html += f'[{info.furigana}]'
+        return html
